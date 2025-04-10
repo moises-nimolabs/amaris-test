@@ -1,0 +1,33 @@
+The HTTP Listener is the entry point of the flow. It is configured for incoming HTTP requests on the path /processData.
+
+The DataWeave reads the JSON content from the apiResponse, extracts the 'title' and 'completed' fields, creates a new JSON object
+with the Keys processedTitle and isCompleted. 
+The expected output is: 
+{
+  "processedTitle": "delectus aut autem",
+  "isCompleted": false
+}
+
+The success-code-validator will trigger the error-handler, log the error with the description, the it will set the payload
+to the value='{"status": "error", "message": "An error occurred"}', making it the final payload of the flow.
+
+The final payload should be: 
+
+{
+  "status": "success",
+  "data": {
+    "processedTitle": "delectus aut autem",
+    "isCompleted": false
+  }
+}
+
+I would change the snippet to:
+
+%dw 2.0
+%var apiResponse = read(vars.apiResponse, "application/json")
+output application/json
+---
+{
+  processedTitle: upper(apiResponse.title),
+  isCompleted: apiResponse.completed
+}
