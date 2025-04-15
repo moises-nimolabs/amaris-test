@@ -1,11 +1,12 @@
+// camel-k: dependency=mvn:org.json:json:20240303
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.Exchange;
 import org.json.JSONObject;
 
-public class HttpCallTransform extends RouteBuilder {
+public class HttpCallRoute extends RouteBuilder {
   @Override
   public void configure() throws Exception {
-	from("direct:start")
+	from("timer:test?period=5000")
 	  .doTry()
 		.to("https://jsonplaceholder.typicode.com/todos/1")
 		.process(exchange -> {
@@ -17,7 +18,7 @@ public class HttpCallTransform extends RouteBuilder {
 			exchange.getIn().setBody(jsonObject.toString());
 		  }
 		})
-		.log("Transformed API Response Title: ${body.title}")
+		.log("Transformed API Response Title: ${body}")
 	  .doCatch(Exception.class)
 		.log("Error calling API: ${exception.message}")
 		.setBody(simple("Error occurred"))

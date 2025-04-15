@@ -1,0 +1,17 @@
+# camel-k: language=yaml
+- route:
+    id: http-call-transform
+    from:
+      uri: "timer:api-timer?period=5000"
+      steps:
+        - to: "https://jsonplaceholder.typicode.com/todos/1"
+        - convert-body-to:
+            type: "java.lang.String"
+        - set-property:
+            name: jsonBody
+            simple: "${body}"
+        - set-body:
+            simple: |
+              ${bean:jsonTransformer?method=transform(${exchangeProperty.jsonBody})}
+        - log:
+            message: "🔠 Transformed Title: ${body}"

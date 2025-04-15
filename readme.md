@@ -1,5 +1,5 @@
 1. Camel-K Test
-   Run with on terminal 'kamel run http-call-transform.yaml'
+   View the file /camel-k/readme.md
 
 2. MuleSoft Test
-   answers are available in the file mulesoft-answers.txt
+   View the file /mulesoft-answers.txt
